@@ -49,6 +49,7 @@ public class PersistentController : MonoBehaviour
     /// </summary>
     public static void ClearStatus()
     {
+        _PersistentController.CancelInvoke("RemoveLastStatus");
         statusList.Clear();
         UpdateStatusLabel();
     }
