@@ -5,7 +5,8 @@ using System.Text;
 
 public class PersistentController : MonoBehaviour
 {
-    private static PersistentController _PersistentController;
+    public static PersistentController _PersistentController;
+    public static NetworkController _NetworkController;
 
     private static List<string> statusList;
     private static Text lblStatus;
@@ -29,6 +30,14 @@ public class PersistentController : MonoBehaviour
         PersistentController.statusList = new List<string>();
         PersistentController.lblStatus = transform.FindChild("lblStatus").GetComponent<Text>();
         PersistentController.lblStatus.text = string.Empty;
+    }
+
+    private void Start()
+    {
+        if (SceneManagerHelper.ActiveSceneName == "Main")
+        {
+            _NetworkController.Connect();
+        }
     }
 
     /// <summary>
@@ -75,7 +84,7 @@ public class PersistentController : MonoBehaviour
 
     public void QuitGame()
     {
-        Debug.Log("Closing game.");
+        Debug.Log("Closing game.");       
         Application.Quit();
     }
 }
