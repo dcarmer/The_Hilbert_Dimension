@@ -17,7 +17,7 @@ public class NetworkController : MonoBehaviour
     public void OnJoinedLobby()
     {
         RoomOptions _RoomOptions = new RoomOptions();
-        _RoomOptions.MaxPlayers = 5;
+        _RoomOptions.MaxPlayers = 9;
         _RoomOptions.PlayerTtl = 5;
         _RoomOptions.EmptyRoomTtl = 5000;
 
