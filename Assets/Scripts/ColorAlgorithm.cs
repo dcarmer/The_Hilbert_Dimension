@@ -1,12 +1,11 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class ColorAlgorithm
+public static class ColorAlgorithm
 {
     private const int MAXIMUM_PLAYERS = 9;
     private static Color[] colors;
 
-    public ColorAlgorithm()
+    static ColorAlgorithm()
     {
         int value = 256;
         colors = new Color[MAXIMUM_PLAYERS];
@@ -34,7 +33,7 @@ public class ColorAlgorithm
         }
     }
 
-    public Color GetColor(int i)
+    public static Color GetColor(int i)
     {
         return colors[i];
     }

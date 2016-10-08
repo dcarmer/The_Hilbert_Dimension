@@ -1,14 +1,11 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 
 public class GameController : MonoBehaviour
 {
     public static GameController _GameController;
-    public ColorAlgorithm _ColorAlgorithm = new ColorAlgorithm();
     public List<NetworkPlayer> players;
-    public int playerCount = 0;
 
     private void Start()
     {

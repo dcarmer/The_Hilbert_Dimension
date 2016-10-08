@@ -1,12 +1,11 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEngine.SceneManagement;
 
 public class NetworkController : MonoBehaviour
 {
     private void Awake()
     {
-        PersistentController._NetworkController = this;        
+        PersistentController._NetworkController = this;
     }
 
     public void Connect()
@@ -25,14 +24,14 @@ public class NetworkController : MonoBehaviour
     }
 
     private void OnJoinedRoom()
-    {    
+    {
         PersistentController.ClearStatus();
 
         if (SceneManagerHelper.ActiveSceneName != "Main" && PhotonNetwork.connected)
         {
             PhotonNetwork.isMessageQueueRunning = false;
             SceneManager.LoadScene("Main");
-        }            
+        }
     }
 
     private void OnPhotonJoinRoomFailed()

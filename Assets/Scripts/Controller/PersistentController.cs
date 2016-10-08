@@ -26,7 +26,7 @@ public class PersistentController : MonoBehaviour
         Debug.Log(string.Format("\"{0}\" version {1} started.", Application.productName, Application.version));
 
         GameObject.DontDestroyOnLoad(this);
-        
+
         PersistentController._PersistentController = this;
 
         PersistentController.statusList = new List<string>();
@@ -84,7 +84,7 @@ public class PersistentController : MonoBehaviour
 
         PersistentController.lblStatus.text = _StringBuilder.ToString();
     }
-   
+
     private void RemoveLastStatus()
     {
         statusList.RemoveAt(statusList.Count - 1);
@@ -93,7 +93,7 @@ public class PersistentController : MonoBehaviour
 
     public void QuitGame()
     {
-        Debug.Log("Closing game.");       
+        Debug.Log("Closing game.");
         Application.Quit();
     }
 }
