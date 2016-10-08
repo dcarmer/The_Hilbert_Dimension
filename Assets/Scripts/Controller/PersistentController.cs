@@ -13,6 +13,8 @@ public class PersistentController : MonoBehaviour
 
     private const float STATUS_TIMEOUT = 15.0f; // Seconds until status messages are removed.
 
+    private string oldState;
+
     private void Awake()
     {
         if (_PersistentController != null)
@@ -38,6 +40,19 @@ public class PersistentController : MonoBehaviour
         {
             _NetworkController.Connect();
         }
+    }
+
+    private void Update()
+    {
+        // TODO: There has to be a better way of doing this...
+        string curr = PhotonNetwork.connectionStateDetailed.ToString();
+
+        if (curr != oldState)
+        {
+            PersistentController.AddStatus(curr);
+        }
+
+        oldState = curr;
     }
 
     /// <summary>

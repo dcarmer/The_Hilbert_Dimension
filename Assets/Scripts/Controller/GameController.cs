@@ -8,13 +8,18 @@ public class GameController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        CreatePlayer();
+        
     }
 
     // Update is called once per frame
     void Update()
     {
 
+    }
+
+    void OnJoinedRoom()
+    {
+        CreatePlayer();
     }
 
     public void CreatePlayer()
