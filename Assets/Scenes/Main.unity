@@ -262,6 +262,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 714358590}
   - 114: {fileID: 714358589}
+  - 114: {fileID: 714358591}
   m_Layer: 0
   m_Name: GameController
   m_TagString: Untagged
@@ -280,6 +281,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6821c3a6668108418d135f06e7d2db0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  players: []
+  playerCount: 0
 --- !u!4 &714358590
 Transform:
   m_ObjectHideFlags: 0
@@ -293,6 +296,31 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3
+--- !u!114 &714358591
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 714358588}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ownerId: 0
+  group: 0
+  prefixBackup: -1
+  observed: {fileID: 0}
+  synchronization: 0
+  onSerializeTransformOption: 3
+  onSerializeRigidBodyOption: 2
+  ownershipTransfer: 0
+  ObservedComponents:
+  - {fileID: 0}
+  ObservedComponentsFoldoutOpen: 1
+  viewIdField: 1
+  instantiationId: 1
+  isRuntimeInstantiated: 0
 --- !u!1 &1339252178
 GameObject:
   m_ObjectHideFlags: 0
@@ -487,7 +515,7 @@ MonoBehaviour:
   m_Script: {fileID: 1980459831, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 800, y: 600}
@@ -546,7 +574,6 @@ GameObject:
   - 33: {fileID: 2003659296}
   - 64: {fileID: 2003659295}
   - 23: {fileID: 2003659294}
-  - 114: {fileID: 2003659298}
   m_Layer: 0
   m_Name: Plane
   m_TagString: Untagged
@@ -615,18 +642,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 6
---- !u!114 &2003659298
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2003659293}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d8c3598cd09f92f459481c1a4b76e74d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player_id: 0
 --- !u!1 &2102854576
 GameObject:
   m_ObjectHideFlags: 0
@@ -657,10 +672,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1903688422}
   m_RootOrder: 0
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -860, y: 532}
-  m_SizeDelta: {x: 200, y: 16}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 8, y: -8}
+  m_SizeDelta: {x: 16, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2102854578
 MonoBehaviour:

@@ -1,13 +1,26 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 public class GameController : MonoBehaviour
 {
+    public static GameController _GameController;
+    public ColorAlgorithm _ColorAlgorithm = new ColorAlgorithm();
+    public List<NetworkPlayer> players;
+    public int playerCount = 0;
+
     private void Start()
     {
-        Debug.Log("Game controller.");
+        if (_GameController != null)
+        {
+            GameObject.Destroy(this.gameObject);
+            return;
+        }
+        _GameController = this;
+
         PhotonNetwork.isMessageQueueRunning = true;
+
         if (!PhotonNetwork.connected)
         {
             SceneManager.LoadScene("MainMenu");
@@ -27,6 +40,4 @@ public class GameController : MonoBehaviour
         Debug.Log("Creating player.");
         PhotonNetwork.Instantiate("NetworkedFPSController", new Vector3(0, 2, 0), Quaternion.identity, 0);
     }
-
-
 }

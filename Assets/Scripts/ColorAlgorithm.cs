@@ -1,26 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ColorAlgorithm : MonoBehaviour {
+public class ColorAlgorithm
+{
     private const int MAXIMUM_PLAYERS = 9;
-    //private static bool initialized = false;
     private static Color[] colors;
-    public int player_id;
-    private int real_id;
 
-
-	// Use this for initialization
-	void Start () {
-        if (colors == null) init();
-        real_id = player_id;
-        GetComponent<Renderer>().material.color = colors[player_id];
-	}
-	
-    private void init()
+    public ColorAlgorithm()
     {
         int value = 256;
         colors = new Color[MAXIMUM_PLAYERS];
-
 
         for (int i = 0; i < MAXIMUM_PLAYERS; i++)
         {
@@ -41,16 +30,12 @@ public class ColorAlgorithm : MonoBehaviour {
             }
             if (i % 7 == 0 && i > 0) value /= 2;
 
-            colors[i] = new Color(((value - 1) * r)/255, ((value - 1) * g)/255, ((value - 1) * b)/255, 1);
+            colors[i] = new Color(((value - 1) * r) / 255, ((value - 1) * g) / 255, ((value - 1) * b) / 255, 1);
         }
     }
 
-	// Update is called once per frame
-	void Update () {
-	    if(player_id != real_id)
-        {
-            real_id = player_id;
-            GetComponent<Renderer>().material.color = colors[player_id];
-        }
-	}
+    public Color GetColor(int i)
+    {
+        return colors[i];
+    }
 }

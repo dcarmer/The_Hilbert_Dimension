@@ -43,7 +43,6 @@ GameObject:
   - 33: {fileID: 33000011206662814}
   - 136: {fileID: 136000012983691370}
   - 23: {fileID: 23000012996471480}
-  - 114: {fileID: 114000011753171734}
   m_Layer: 0
   m_Name: Capsule
   m_TagString: Untagged
@@ -301,18 +300,6 @@ MonoBehaviour:
   viewIdField: 0
   instantiationId: -1
   isRuntimeInstantiated: 0
---- !u!114 &114000011753171734
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000013612507060}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d8c3598cd09f92f459481c1a4b76e74d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player_id: 0
 --- !u!114 &114000012726259638
 MonoBehaviour:
   m_ObjectHideFlags: 1
