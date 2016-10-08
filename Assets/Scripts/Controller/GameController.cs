@@ -38,6 +38,6 @@ public class GameController : MonoBehaviour
     public void CreatePlayer()
     {
         Debug.Log("Creating player.");
-        PhotonNetwork.Instantiate("NetworkedFPSController", new Vector3(0, 2, 0), Quaternion.identity, 0);
+        PhotonNetwork.Instantiate("NetworkedFPSController", new Vector3(Random.Range(-10, 10), 2, Random.Range(-10, 10)), Quaternion.identity, 0);
     }
 }
