@@ -24,22 +24,14 @@ public class NetworkController : MonoBehaviour
         PhotonNetwork.JoinOrCreateRoom("Test Room", _RoomOptions, TypedLobby.Default);
     }
 
-    public void OnJoinedRoom()
+    private void OnJoinedRoom()
     {    
         PersistentController.ClearStatus();
 
         if (SceneManagerHelper.ActiveSceneName != "Main" && PhotonNetwork.connected)
         {
+            PhotonNetwork.isMessageQueueRunning = false;
             SceneManager.LoadScene("Main");
         }            
-    }
-
-    public void LogRooms()
-    {
-        Debug.Log("Current rooms: " + PhotonNetwork.GetRoomList().Length);
-        foreach (RoomInfo curr in PhotonNetwork.GetRoomList())
-        {
-            Debug.Log(string.Format("   {0}", curr.ToString()));
-        }
     }
 }

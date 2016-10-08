@@ -34,14 +34,6 @@ public class PersistentController : MonoBehaviour
         PersistentController.lblStatus.text = string.Empty;
     }
 
-    private void Start()
-    {
-        if (SceneManagerHelper.ActiveSceneName == "Main")
-        {
-            _NetworkController.Connect();
-        }
-    }
-
     private void Update()
     {
         // TODO: There has to be a better way of doing this...
@@ -59,8 +51,10 @@ public class PersistentController : MonoBehaviour
     /// Add a temporary status message visible to the user.   
     /// </summary>
     /// <param name="msg">Statys message.</param>
-    public static void AddStatus(string msg)
+    public static void AddStatus(string msg, bool error = false)
     {
+        msg = error ? string.Format("<color=red>{0}</color>", msg) : msg;
+
         Debug.Log(string.Format("Status: {0}", msg));
         statusList.Insert(0, msg);
         UpdateStatusLabel();

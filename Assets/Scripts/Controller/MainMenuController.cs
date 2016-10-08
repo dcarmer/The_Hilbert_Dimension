@@ -13,7 +13,7 @@ public class MainMenuController : MonoBehaviour
 
     public void btnPlay_Click()
     {
-        PersistentController._NetworkController.Connect();       
+        PersistentController._NetworkController.Connect();
     }
 
 }
