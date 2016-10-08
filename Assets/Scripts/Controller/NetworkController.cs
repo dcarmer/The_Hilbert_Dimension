@@ -34,4 +34,10 @@ public class NetworkController : MonoBehaviour
             SceneManager.LoadScene("Main");
         }            
     }
+
+    private void OnPhotonJoinRoomFailed()
+    {
+        PersistentController.AddStatus("Could not join room. (Is it full?)", true);
+        PhotonNetwork.Disconnect();
+    }
 }
