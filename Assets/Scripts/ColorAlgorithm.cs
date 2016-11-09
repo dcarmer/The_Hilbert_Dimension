@@ -4,7 +4,7 @@ public static class ColorAlgorithm
 {
     private const int MAXIMUM_PLAYERS = 9;
     private static Color[] colors;
-    private static int nextPlayer = 2;
+    private static int nextPlayer = 0;
 
     public static int getPlayerID()
     {

@@ -40,20 +40,55 @@ public class GameController : MonoBehaviour
 
         if (atSchool)
         {
-            Instantiate(Resources.Load<GameObject>("SinglePlayerFPSController"), new Vector3(Random.Range(-10, 10), 2, Random.Range(-10, 10)), Quaternion.identity);
+            GameObject o = Resources.Load<GameObject>("SinglePlayerFPSController");
+            
+            o.layer = LayerMask.NameToLayer("Player " + (playerID + 2));
+
+            Object i = Instantiate(o, new Vector3(Random.Range(-10, 10), 2, Random.Range(-10, 10)), Quaternion.identity);
+            Camera c = o.GetComponentInChildren<Camera>();
+            teamCamera(c, playerID+1);
             return;
         }
 
         PhotonNetwork.Instantiate("NetworkedFPSController", new Vector3(Random.Range(-10, 10), 2, Random.Range(-10, 10)), Quaternion.identity, 0);
     }
 
+    private const int teamoffset = 8;
+    private const int numberOfTeams = 7;
+    private static void teamCamera(Camera c, int team)
+    {
+        int currentTeamsWalls = team;
+        for (int i = 0; i < numberOfTeams; i++)
+        {
+            if (i != currentTeamsWalls) hideLayer(c, "Walls " + (i + 1));
+        }
+    }
+
+    private static void hideLayer(Camera c, int layer)
+    {
+        Debug.Log(layer);
+        c.cullingMask |= layer;
+    }
+
+    private static void showLayer(Camera c, int layer)
+    {
+        c.cullingMask &= ~layer;
+    }
+
+    private static void hideLayer(Camera c, string layer)
+    {
+        int l = LayerMask.NameToLayer(layer);
+        hideLayer(c, 1 << l);
+    }
+
+    static int playerID;
     static Color color;
 
     public void GenerateLevel()//curent level plane is 50x50 centered on origin
     {        
         Debug.Log("Generating Level.");
 
-        int playerID = ColorAlgorithm.getPlayerID();
+        playerID = ColorAlgorithm.getPlayerID();
         color = ColorAlgorithm.GetColor(playerID);
 
         /* Puts Walls around Every node */
@@ -151,7 +186,10 @@ public class GameController : MonoBehaviour
             o = ((Transform)Instantiate(yz_wall, new Vector3(x, sz.y / 2, z+sz.z/2), Quaternion.identity)).gameObject;
         }
 
-        if(o != null && color != null) o.GetComponent<Renderer>().material.color = color;
+        Renderer r = o.GetComponent<Renderer>();
+        r.material.color = color;
+        //Collider c = o.GetComponent<Collider>();
+        o.layer = LayerMask.NameToLayer("Walls " + (playerID + 1));
         return o;
     }
 }
