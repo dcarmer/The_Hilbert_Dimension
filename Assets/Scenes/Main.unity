@@ -283,6 +283,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   players: []
+  xy_wall: {fileID: 4000013087211414, guid: aa2fc151e7293aa40b1cd95e6a862eb8, type: 2}
+  yz_wall: {fileID: 4000011743203794, guid: 4a5e4e76fe9ceb944a0833d9e41f896f, type: 2}
 --- !u!4 &714358590
 Transform:
   m_ObjectHideFlags: 0
