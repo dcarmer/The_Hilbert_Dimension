@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class GameController : MonoBehaviour
 {
-    public static bool atSchool = true;
+    public static bool atSchool = false;
     public static GameController _GameController;
     public List<NetworkPlayer> players;
     public Transform xy_wall, yz_wall;   
