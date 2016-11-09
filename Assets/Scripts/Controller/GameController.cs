@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class GameController : MonoBehaviour
 {
-    public static bool atSchool = false;
+    public static bool atSchool = true;
     public static GameController _GameController;
     public List<NetworkPlayer> players;
     public Transform xy_wall, yz_wall;   
@@ -47,9 +47,14 @@ public class GameController : MonoBehaviour
         PhotonNetwork.Instantiate("NetworkedFPSController", new Vector3(Random.Range(-10, 10), 2, Random.Range(-10, 10)), Quaternion.identity, 0);
     }
 
+    static Color color;
+
     public void GenerateLevel()//curent level plane is 50x50 centered on origin
     {        
         Debug.Log("Generating Level.");
+
+        int playerID = ColorAlgorithm.getPlayerID();
+        color = ColorAlgorithm.GetColor(playerID);
 
         /* Puts Walls around Every node */
         Object[,,] walls = new Object[11, 11, 2]; //Tot#Walls for nxm grid = n*(m+1)+ m*(n+1) = 2mn+n+m
@@ -63,9 +68,15 @@ public class GameController : MonoBehaviour
                     z = j * 5 - 25;
                     walls[i, j, 0] = makeWall(x, z, true);
                     walls[i, j, 1] = makeWall(x, z, false);
+
+                    //((GameObject)walls[i, j, 0]).GetComponent<SpriteRenderer>().color = color;
+                    //((GameObject)walls[i, j, 1]).GetComponent<SpriteRenderer>().color = color;
                 }
                 walls[i, 10, 0] = makeWall(x, 25, true);
                 walls[i, 10, 1] = makeWall(25, x, false);
+
+                //((GameObject)walls[i, 10, 0]).GetComponent<SpriteRenderer>().color = color;
+                //((GameObject)walls[i, 10, 1]).GetComponent<SpriteRenderer>().color = color;
             };
         }
         
@@ -128,15 +139,19 @@ public class GameController : MonoBehaviour
     }
     public Object makeWall(float x, float z, bool xy)
     {
-        if(xy)
+        GameObject o;
+        if (xy)
         {
             Vector3 sz = xy_wall.gameObject.GetComponent<Renderer>().bounds.size;
-            return ((Transform)Instantiate(xy_wall, new Vector3(x+sz.x/2, sz.y/2, z), Quaternion.identity)).gameObject;
+            o = ((Transform)Instantiate(xy_wall, new Vector3(x + sz.x / 2, sz.y / 2, z), Quaternion.identity)).gameObject;
         }
         else
         {
             Vector3 sz = yz_wall.gameObject.GetComponent<Renderer>().bounds.size;
-            return ((Transform)Instantiate(yz_wall, new Vector3(x, sz.y / 2, z+sz.z/2), Quaternion.identity)).gameObject;
+            o = ((Transform)Instantiate(yz_wall, new Vector3(x, sz.y / 2, z+sz.z/2), Quaternion.identity)).gameObject;
         }
+
+        if(o != null && color != null) o.GetComponent<Renderer>().material.color = color;
+        return o;
     }
 }
