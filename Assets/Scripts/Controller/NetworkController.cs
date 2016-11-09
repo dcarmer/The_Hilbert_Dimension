@@ -9,7 +9,7 @@ public class NetworkController : MonoBehaviour
     }
 
     public void Connect()
-    {
+    {        
         PhotonNetwork.ConnectUsingSettings(Application.version);
     }
 

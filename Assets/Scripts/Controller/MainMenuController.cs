@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MainMenuController : MonoBehaviour
@@ -11,6 +12,13 @@ public class MainMenuController : MonoBehaviour
 
     public void btnPlay_Click()
     {
+        if (GameController.atSchool)
+        {
+            SceneManager.LoadScene("Main");
+            PersistentController.AddStatus("At School Mode");
+            return;
+        }
+
         PersistentController._NetworkController.Connect();
     }
 }

@@ -4,9 +4,10 @@ using System.Collections.Generic;
 
 public class GameController : MonoBehaviour
 {
+    public static bool atSchool = true;
     public static GameController _GameController;
     public List<NetworkPlayer> players;
-    public Transform xy_wall, yz_wall;
+    public Transform xy_wall, yz_wall;   
 
     private void Start()
     {
@@ -19,7 +20,7 @@ public class GameController : MonoBehaviour
 
         PhotonNetwork.isMessageQueueRunning = true;
 
-        if (!PhotonNetwork.connected)
+        if (!PhotonNetwork.connected && !atSchool)
         {
             SceneManager.LoadScene("MainMenu");
 
@@ -36,6 +37,13 @@ public class GameController : MonoBehaviour
     public void CreatePlayer()
     {
         Debug.Log("Creating player.");
+
+        if (atSchool)
+        {
+            Instantiate(Resources.Load<GameObject>("SinglePlayerFPSController"), new Vector3(Random.Range(-10, 10), 2, Random.Range(-10, 10)), Quaternion.identity);
+            return;
+        }
+
         PhotonNetwork.Instantiate("NetworkedFPSController", new Vector3(Random.Range(-10, 10), 2, Random.Range(-10, 10)), Quaternion.identity, 0);
     }
 
