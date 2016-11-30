@@ -7,7 +7,8 @@ public class GameController : MonoBehaviour
     public static bool atSchool = false;
     public static GameController _GameController;
     public List<NetworkPlayer> players;
-    public Transform xy_wall, yz_wall;   
+    public static GameObject xy_wall;
+    public static GameObject yz_wall;
 
     private void Start()
     {
@@ -30,11 +31,15 @@ public class GameController : MonoBehaviour
             }
             return;
         }
-        GenerateLevel();
-        CreatePlayer();
+
+        xy_wall = (GameObject)Resources.Load<GameObject>("Wallxy");
+        yz_wall = (GameObject)Resources.Load<GameObject>("Wallyz");
+
+    int id = CreatePlayer();
+        //GenerateLevel(id);
     }
 
-    public void CreatePlayer()
+    public int CreatePlayer()
     {
         Debug.Log("Creating player.");
 
@@ -55,7 +60,7 @@ public class GameController : MonoBehaviour
 
             Vector3 pos = i.transform.position;
 
-            guno.transform.position = pos + i.transform.forward * 2;
+            guno.transform.position = pos + i.GetComponent<Camera>().transform.forward * 2;
 
             guno.transform.parent = i.transform;
             guno.GetComponent<Gun>().SetTeam(playerID);
@@ -65,26 +70,21 @@ public class GameController : MonoBehaviour
 
             Camera c = i.GetComponentInChildren<Camera>();
             teamCamera(c, playerID+1);
-            return;
+            return playerID;
         }
 
         GameObject player = PhotonNetwork.Instantiate("NetworkedFPSController", new Vector3(Random.Range(-10, 10), 2, Random.Range(-10, 10)), Quaternion.identity, 0);
 
-        GameObject gun1 = Resources.Load<GameObject>("Gun");
 
-        GameObject gun2 = (GameObject)Instantiate(gun1);
-
-        Vector3 pos1 = player.transform.position;
-
-        gun2.transform.position = pos1 + player.transform.forward * 2;
-
-        gun2.transform.parent = player.transform;
-        gun2.GetComponent<Gun>().SetTeam(playerID);
+       
 
         player.layer = 8 + playerID;
 
         Camera cam = player.GetComponentInChildren<Camera>();
         teamCamera(cam, playerID + 1);
+
+        Debug.Log(playerID);
+        return playerID;
     }
 
     private const int teamoffset = 8;
@@ -118,11 +118,11 @@ public class GameController : MonoBehaviour
     static int playerID;
     static Color color;
 
-    public void GenerateLevel()//curent level plane is 50x50 centered on origin
+    public static void GenerateLevel(int id)//curent level plane is 50x50 centered on origin
     {        
         Debug.Log("Generating Level.");
 
-        playerID = ColorAlgorithm.getPlayerID();
+        playerID = id;
         color = ColorAlgorithm.GetColor(playerID);
 
         /* Puts Walls around Every node */
@@ -206,18 +206,18 @@ public class GameController : MonoBehaviour
             
         }
     }
-    public Object makeWall(float x, float z, bool xy)
+    public static Object makeWall(float x, float z, bool xy)
     {
         GameObject o;
         if (xy)
         {
             Vector3 sz = xy_wall.gameObject.GetComponent<Renderer>().bounds.size;
-            o = ((Transform)Instantiate(xy_wall, new Vector3(x + sz.x / 2, sz.y / 2, z), Quaternion.identity)).gameObject;
+            o = (GameObject) Instantiate(xy_wall, new Vector3(x + sz.x / 2, sz.y / 2, z), Quaternion.identity);
         }
         else
         {
             Vector3 sz = yz_wall.gameObject.GetComponent<Renderer>().bounds.size;
-            o = ((Transform)Instantiate(yz_wall, new Vector3(x, sz.y / 2, z+sz.z/2), Quaternion.identity)).gameObject;
+            o = (GameObject)Instantiate(yz_wall, new Vector3(x, sz.y / 2, z+sz.z/2), Quaternion.identity);
         }
 
         Renderer r = o.GetComponent<Renderer>();

@@ -3,6 +3,7 @@ using UnityEngine.UI;
 
 public class NetworkPlayer : MonoBehaviour
 {
+    public static int mainID;
     public int id = -1;
 
     private GameObject overviewCamera;
@@ -32,6 +33,7 @@ public class NetworkPlayer : MonoBehaviour
     private void Start()
     {
         id = (int)_PhotonView.owner.customProperties["ID"] + 1;
+        mainID = id;
 
         _Renderer = this.GetComponentInChildren<Renderer>();
         colorIndicator = GameObject.Find("ColorIndicator").GetComponent<Image>();
@@ -40,9 +42,9 @@ public class NetworkPlayer : MonoBehaviour
         _AudioListener = GetComponentInChildren<AudioListener>();
 
         _Renderer.material.color = ColorAlgorithm.GetColor(id);
-        Debug.Log(this.gameObject.layer);
+        //Debug.Log(this.gameObject.layer);
         this.gameObject.layer = LayerMask.NameToLayer("Player " + (id+1));
-        Debug.Log(this.gameObject.layer);
+        //Debug.Log(this.gameObject.layer);
 
         teamCamera(_Camera, id);
 
@@ -56,7 +58,21 @@ public class NetworkPlayer : MonoBehaviour
         _Camera.enabled = _PhotonView.isMine;
         _AudioListener.enabled = _PhotonView.isMine;
 
+        GameObject gun1 = Resources.Load<GameObject>("Gun");
+        GameObject gun2 = (GameObject)Instantiate(gun1);
 
+        //playerID = player.GetComponent<NetworkPlayer>().id;
+        //playerID = PhotonView.owner.customProperties["ID"] + 1;
+
+        Vector3 pos1 = this.transform.position;
+
+        gun2.transform.position = pos1 + this.transform.forward * 2;
+
+        gun2.transform.parent = this.GetComponentInChildren<Camera>().transform;
+        gun2.GetComponent<Gun>().SetTeam(id);
+
+
+        GameController.GenerateLevel(id);
     }
 
     private const int teamoffset = 8;

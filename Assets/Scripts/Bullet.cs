@@ -12,14 +12,13 @@ public class Bullet : MonoBehaviour {
 
     void OnCollisionEnter(Collision col)
     {
-        if(col.gameObject.name == hits)
+        if (col.gameObject.name.Contains(hits))
         {
+            Debug.Log("ded");
             //Put health stuff here
             //This means it hit a person
-
-
-            Return();
         }
+        Return();
     }
 
     public void Fire ()

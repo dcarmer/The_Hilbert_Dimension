@@ -43,6 +43,7 @@ public static class ColorAlgorithm
 
     public static Color GetColor(int i)
     {
+       // Debug.Log(i);
         return colors[i];
     }
 }
