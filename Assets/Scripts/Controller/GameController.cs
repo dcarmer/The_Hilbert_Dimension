@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class GameController : MonoBehaviour
 {
-    public static bool atSchool = true;
+    public static bool atSchool = false;
     public static GameController _GameController;
     public List<NetworkPlayer> players;
     public Transform xy_wall, yz_wall;   
@@ -60,13 +60,31 @@ public class GameController : MonoBehaviour
             guno.transform.parent = i.transform;
             guno.GetComponent<Gun>().SetTeam(playerID);
 
-            
+
+            i.layer = 8 + playerID;
+
             Camera c = i.GetComponentInChildren<Camera>();
             teamCamera(c, playerID+1);
             return;
         }
 
-        PhotonNetwork.Instantiate("NetworkedFPSController", new Vector3(Random.Range(-10, 10), 2, Random.Range(-10, 10)), Quaternion.identity, 0);
+        GameObject player = PhotonNetwork.Instantiate("NetworkedFPSController", new Vector3(Random.Range(-10, 10), 2, Random.Range(-10, 10)), Quaternion.identity, 0);
+
+        GameObject gun1 = Resources.Load<GameObject>("Gun");
+
+        GameObject gun2 = (GameObject)Instantiate(gun1);
+
+        Vector3 pos1 = player.transform.position;
+
+        gun2.transform.position = pos1 + player.transform.forward * 2;
+
+        gun2.transform.parent = player.transform;
+        gun2.GetComponent<Gun>().SetTeam(playerID);
+
+        player.layer = 8 + playerID;
+
+        Camera cam = player.GetComponentInChildren<Camera>();
+        teamCamera(cam, playerID + 1);
     }
 
     private const int teamoffset = 8;

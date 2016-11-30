@@ -51,6 +51,8 @@ public class Gun : MonoBehaviour {
             o2.GetComponent<Renderer>().material.color = c;
             o2.GetComponentInChildren<Light>().color = c;
             o2.GetComponent<Bullet>().gun = this;
+            o2.layer = 22; //The bullet layer
+            o2.transform.position = new Vector3(0, -10, 0);
 
             if (clip == null) clip = new Stack<GameObject>();
             clip.Push(o2);
