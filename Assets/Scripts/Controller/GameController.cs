@@ -41,11 +41,27 @@ public class GameController : MonoBehaviour
         if (atSchool)
         {
             GameObject o = Resources.Load<GameObject>("SinglePlayerFPSController");
-            
-            o.layer = LayerMask.NameToLayer("Player " + (playerID + 2));
 
-            Object i = Instantiate(o, new Vector3(Random.Range(-10, 10), 2, Random.Range(-10, 10)), Quaternion.identity);
-            Camera c = o.GetComponentInChildren<Camera>();
+            GameObject i = (GameObject)Instantiate(o, new Vector3(Random.Range(-10, 10), 2, Random.Range(-10, 10)), Quaternion.identity);
+
+
+            i.layer = LayerMask.NameToLayer("Player " + (playerID + 2));
+
+
+
+            GameObject gun = Resources.Load<GameObject>("Gun");
+
+            GameObject guno = (GameObject)Instantiate(gun);
+
+            Vector3 pos = i.transform.position;
+
+            guno.transform.position = pos + i.transform.forward * 2;
+
+            guno.transform.parent = i.transform;
+            guno.GetComponent<Gun>().SetTeam(playerID);
+
+            
+            Camera c = i.GetComponentInChildren<Camera>();
             teamCamera(c, playerID+1);
             return;
         }
