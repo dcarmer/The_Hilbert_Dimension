@@ -5,16 +5,23 @@ using System;
 
 public class Gun : MonoBehaviour {
 
-    private const int NUM_OF_BULLETS = 10;
+    private const int NUM_OF_BULLETS = 20;
     private const float BULLET_SPEED = 20;
+    private const float FIRE_DELAY = 0.08f;
+    private const float RELOAD_DELAY = 2.0f;
+    private const int RELOAD_AMOUNT = 1;
+
+    private float currentFireDelay = 0;
+    private float currentReloadDelay = 0;
     private Stack<GameObject> clip;
+    private Stack<GameObject> unloaded;
     private int id;
 
     public void Load (GameObject bullet)
     {
         bullet.GetComponent<Rigidbody>().velocity = Vector3.zero;
-        bullet.transform.position = new Vector3(0, -10, 0);
-        clip.Push(bullet);
+        bullet.transform.position = new Vector3(0, -1000, 0);
+        unloaded.Push(bullet); //I know it doesn't make since, its a recent change
     }
 
     void Shoot()
@@ -22,8 +29,10 @@ public class Gun : MonoBehaviour {
         //if (this.gameObject.GetComponentInParent<NetworkPlayer>().id != NetworkPlayer.mainID) return;
         try
         {
-            if (clip != null && clip.Peek() != null)
+            if (clip != null && clip.Count > 0)
             {
+                currentFireDelay = FIRE_DELAY;
+                currentReloadDelay = RELOAD_DELAY;
                 Vector3 rotation = this.gameObject.transform.forward;
                 Vector3 position = this.gameObject.transform.position;
 
@@ -60,7 +69,11 @@ public class Gun : MonoBehaviour {
             o2.layer = 22; //The bullet layer
             o2.transform.position = new Vector3(0, -1000, 0);
 
-            if (clip == null) clip = new Stack<GameObject>();
+            if (clip == null)
+            {
+                clip = new Stack<GameObject>();
+                
+            }
             clip.Push(o2);
         }
     }
@@ -72,7 +85,29 @@ public class Gun : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-        if (Input.GetMouseButtonDown(0))
+        if(currentReloadDelay > 0) currentReloadDelay -= Time.deltaTime;
+        if(unloaded == null)
+        {
+            unloaded = new Stack<GameObject>();
+            return;
+        }
+        if (unloaded.Count > 0)
+        {
+            if (currentReloadDelay <= 0)
+            {
+                for(int i = 0; i < RELOAD_AMOUNT; i++)
+                {
+                    if (unloaded.Peek() == null) break;
+                    clip.Push(unloaded.Pop());
+                }
+            }
+        }
+        if(currentFireDelay > 0)
+        {
+            currentFireDelay -= Time.deltaTime;
+            return;
+        }
+        if (Input.GetMouseButton(0))
         {
             this.Shoot();
         }
