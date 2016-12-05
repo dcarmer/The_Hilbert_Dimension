@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using UnityEngine.UI;
 
 public class Gun : MonoBehaviour {
 
@@ -16,12 +17,18 @@ public class Gun : MonoBehaviour {
     private Stack<GameObject> clip;
     private Stack<GameObject> unloaded;
     private int id;
+    private GameObject gui;
 
     public void Load (GameObject bullet)
     {
         bullet.GetComponent<Rigidbody>().velocity = Vector3.zero;
         bullet.transform.position = new Vector3(0, -1000, 0);
         unloaded.Push(bullet); //I know it doesn't make since, its a recent change
+    }
+
+    void UpdateUI()
+    {
+        gui.GetComponent<Text>().text = "Ammo: " + clip.Count;
     }
 
     void Shoot()
@@ -41,6 +48,7 @@ public class Gun : MonoBehaviour {
                 //bullet.transform.rotation.SetLookRotation(rotation * 3);
                 bullet.GetComponent<Rigidbody>().velocity = rotation * BULLET_SPEED;
                 bullet.GetComponent<Bullet>().Fire();
+                this.UpdateUI();
             }
         }
         catch (InvalidOperationException e) { }
@@ -76,6 +84,8 @@ public class Gun : MonoBehaviour {
             }
             clip.Push(o2);
         }
+        this.gui = GameObject.Find("AmmoCounter");
+        UpdateUI();
     }
 
     void SetColor(Color c)
@@ -99,6 +109,7 @@ public class Gun : MonoBehaviour {
                 {
                     if (unloaded.Peek() == null) break;
                     clip.Push(unloaded.Pop());
+                    this.UpdateUI();
                 }
             }
         }
