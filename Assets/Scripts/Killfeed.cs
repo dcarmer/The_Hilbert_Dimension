@@ -34,6 +34,7 @@ public class Killfeed : MonoBehaviour {
     void UpdateText()
     {
         Text text = this.gameObject.GetComponent<Text>();
+        text.text = "";
         if (kills.Count == 0)
         {
             text.text = "";

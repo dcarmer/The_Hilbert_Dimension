@@ -27,7 +27,7 @@ public class Leaderboards : MonoBehaviour {
         }
         int val;
         kills.TryGetValue(killer, out val);
-        kills.Add(killer, val + 1);
+        kills[killer] = val + 1;
         this.UpdateLeaderboards();
     }
 

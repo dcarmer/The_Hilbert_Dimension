@@ -53,9 +53,9 @@ public class NetworkPlayer : MonoBehaviour
         PhotonNetwork.RaiseEvent(2, new byte[] {(byte)id, (byte)this.id }, true, null);
         invulnurable = true;
         respawntime = RESPAWN_DELAY;
-        Color c = this.gameObject.GetComponent<Renderer>().material.color;
-        c.a = 0;
-        this.gameObject.GetComponent<Renderer>().material.color = c;
+        //Color c = this.gameObject.GetComponentInChildren<Renderer>().material.color;
+        //c.a = 0;
+        //this.gameObject.GetComponentInChildren<Renderer>().material.color = c;
     }
 
     public void Respawn()
@@ -67,9 +67,9 @@ public class NetworkPlayer : MonoBehaviour
         health = MAXIMUM_HEALTH;
         invulnurable = true;
         UpdateHealth();
-        Color c = this.gameObject.GetComponent<Renderer>().material.color;
-        c.a = 1;
-        this.gameObject.GetComponent<Renderer>().material.color = c;
+        //Color c = this.gameObject.GetComponentInChildren<Renderer>().material.color;
+        //c.a = 1;
+        //this.gameObject.GetComponentInChildren<Renderer>().material.color = c;
     }
 
     private void UpdateHealth()
@@ -243,7 +243,7 @@ public class NetworkPlayer : MonoBehaviour
         {
 
             NetworkPlayer sender;
-            players.TryGetValue(c[1], out sender);
+            players.TryGetValue(c[0], out sender);
             sender.gun.GetComponent<Gun>().NetworkShoot();
             //return;
         }
