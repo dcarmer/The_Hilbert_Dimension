@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class Bullet : MonoBehaviour {
 
@@ -8,16 +9,21 @@ public class Bullet : MonoBehaviour {
     private float remainingTime;
     private bool fired = false;
     public Gun gun;
+    //public GameObject hitmarker = GameObject.Find("HitMarker");
 
 
     void OnCollisionEnter(Collision col)
     {
+        this.GetComponent<AudioSource>().Play();
+        Color color = GameObject.Find("HitMarker").GetComponent<Image>().color;
+        color.a = 1.0f;
+        GameObject.Find("HitMarker").GetComponent<Image>().color = color;
         if (col.gameObject.name.Contains(hits))
         {
             Debug.Log("ded");
             //Put health stuff here
             //This means it hit a person
-            this.GetComponent<AudioSource>().Play();
+            
         }
         Return();
     }
