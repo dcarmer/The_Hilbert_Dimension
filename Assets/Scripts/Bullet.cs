@@ -26,10 +26,6 @@ public class Bullet : MonoBehaviour {
             Debug.Log("Collides: " + col.gameObject.GetComponentInChildren<Gun>().id);
             NetworkPlayer.NetworkHit(col.gameObject.GetComponentInChildren<Gun>().id, this.gun.id);
         }
-        if (network)
-        {
-            Object.Destroy(this);
-        }
         Return();
     }
 
@@ -41,10 +37,6 @@ public class Bullet : MonoBehaviour {
 
     void Return ()
     {
-        if (network)
-        {
-            Object.Destroy(this);
-        }
         fired = false;
         remainingTime = 1;
         if(gun != null)
@@ -71,10 +63,6 @@ public class Bullet : MonoBehaviour {
             remainingTime -= Time.deltaTime;
             if(remainingTime <= 0)
             {
-                if (network)
-                {
-                    Object.Destroy(this);
-                }
                     this.Return();
             }
         }

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 public class Killfeed : MonoBehaviour {
 
     private const float FADE_DELAY = 2.0f;
-    private const float TIME_TO_LIVE = 5.0f;
+    private const float TIME_TO_LIVE = 10.0f;
     private const int MAXIMUM = 5;
 
     private float kicknext = -1;
@@ -66,6 +66,7 @@ public class Killfeed : MonoBehaviour {
                 kills.Dequeue();
                 if (kills.Count > 0) kicknext = TIME_TO_LIVE;
                 else kicknext = -1;
+                UpdateText();
             }
         }
 	}

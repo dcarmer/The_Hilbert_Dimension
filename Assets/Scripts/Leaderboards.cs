@@ -36,7 +36,7 @@ public class Leaderboards : MonoBehaviour {
         int length = leaderboards.Length;
         for(int i = 0; i < length - 1; i++)
         {
-            int max = -1;
+            int max = kills[leaderboards[i]];
             int maxi = i;
             for(int k = i + 1; k < length; k++)
             {
@@ -85,7 +85,7 @@ public class Leaderboards : MonoBehaviour {
             string name = ColorAlgorithm.GetName(leaderboards[i]);
             int val;
             kills.TryGetValue(leaderboards[i], out val);
-            text.text += (i + 1) + " | " + name + " | " + val;
+            text.text += (i + 1) + " | " + name + " | " + val + "\n";
         }
     }
 

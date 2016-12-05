@@ -8,7 +8,7 @@ public class Gun : MonoBehaviour {
     //Don't touch this unless you're sure
     private const float SOUND_FILE_LENGTH = 10.0f;
 
-    private const int NUM_OF_BULLETS = 20;
+    private const int NUM_OF_BULLETS = 30;
     private const float BULLET_SPEED = 20;
     private const float FIRE_DELAY = 0.08f;
     private const float RELOAD_DELAY = 2.0f;
@@ -34,7 +34,8 @@ public class Gun : MonoBehaviour {
         gui.GetComponent<Text>().text = "Ammo: " + clip.Count;
     }
 
-    public void NetworkShoot()
+
+    public GameObject CreateBullet()
     {
         Vector3 rotation = this.gameObject.transform.forward;
         Vector3 position = this.gameObject.transform.position;
@@ -49,12 +50,35 @@ public class Gun : MonoBehaviour {
         o2.GetComponentInChildren<Light>().color = c;
         o2.GetComponent<Bullet>().gun = this;
         o2.layer = 22; //The bullet layer
+        o2.transform.position = new Vector3(0, -1000, 0);
 
-        o2.transform.position = position + rotation * 0.7f;
+
+
+        //o2.transform.position = position + rotation * 0.7f;
         //bullet.transform.rotation.SetLookRotation(rotation * 3);
         o2.GetComponent<Rigidbody>().velocity = rotation * BULLET_SPEED;
-        o2.GetComponent<Bullet>().network = true;
-        o2.GetComponent<Bullet>().Fire();
+        //o2.GetComponent<Bullet>().network = true;
+        //o2.GetComponent<Bullet>().Fire();
+        return o2;
+    }
+
+    public void NetworkShoot()
+    {
+        if (clip.Count == 0) clip.Push(CreateBullet());
+            this.GetComponent<AudioSource>().time = SOUND_FILE_LENGTH - SOUND_PLAY_LENGTH;
+            this.GetComponent<AudioSource>().Play();
+            currentFireDelay = FIRE_DELAY;
+            currentReloadDelay = RELOAD_DELAY;
+            Vector3 rotation = this.gameObject.transform.forward;
+            Vector3 position = this.gameObject.transform.position;
+
+            GameObject bullet = (GameObject)clip.Pop();
+            bullet.transform.position = position + rotation * 0.7f;
+            //bullet.transform.rotation.SetLookRotation(rotation * 3);
+            bullet.GetComponent<Rigidbody>().velocity = rotation * BULLET_SPEED;
+            bullet.GetComponent<Bullet>().Fire();
+            NetworkPlayer.Shoot(this.id);
+            this.UpdateUI();
     }
 
     public void Shoot()
@@ -130,15 +154,15 @@ public class Gun : MonoBehaviour {
             unloaded = new Stack<GameObject>();
             return;
         }
-        if (unloaded.Count > 0)
+        if (clip.Count < NUM_OF_BULLETS)
         {
             if (currentReloadDelay <= 0)
             {
                 if (clip.Count == NUM_OF_BULLETS)
                 {
-                    unloaded = new Stack<GameObject>();
                     return;
                 }
+                if (unloaded.Count == 0) unloaded.Push(CreateBullet());
                 clip.Push(unloaded.Pop());
                 this.UpdateUI();
             }
