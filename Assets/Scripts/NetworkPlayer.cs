@@ -50,9 +50,12 @@ public class NetworkPlayer : MonoBehaviour
     public void Die(int id) {
         GetComponent<UnityStandardAssets.Characters.FirstPerson.FirstPersonController>().enabled = false; //stop moving
         Leaderboards.ReportKill(id, this.id);
-        PhotonNetwork.RaiseEvent(0, new byte[] {2, (byte)id, (byte)this.id }, true, null);
+        PhotonNetwork.RaiseEvent(2, new byte[] {(byte)id, (byte)this.id }, true, null);
         invulnurable = true;
         respawntime = RESPAWN_DELAY;
+        Color c = this.gameObject.GetComponent<Renderer>().material.color;
+        c.a = 0;
+        this.gameObject.GetComponent<Renderer>().material.color = c;
     }
 
     public void Respawn()
@@ -64,6 +67,9 @@ public class NetworkPlayer : MonoBehaviour
         health = MAXIMUM_HEALTH;
         invulnurable = true;
         UpdateHealth();
+        Color c = this.gameObject.GetComponent<Renderer>().material.color;
+        c.a = 1;
+        this.gameObject.GetComponent<Renderer>().material.color = c;
     }
 
     private void UpdateHealth()
@@ -92,7 +98,7 @@ public class NetworkPlayer : MonoBehaviour
     private void Start()
     {
         id = (int)_PhotonView.owner.customProperties["ID"];
-        players.Add(id, this);
+        players[id] = this;
 
         _Renderer = this.GetComponentInChildren<Renderer>();
         colorIndicator = GameObject.Find("ColorIndicator").GetComponent<Image>();
@@ -217,40 +223,41 @@ public class NetworkPlayer : MonoBehaviour
 
     public static void Shoot(int id)
     {
-        PhotonNetwork.RaiseEvent(0, new byte[] {0, (byte)id }, true, null);
+        PhotonNetwork.RaiseEvent(0, new byte[] {(byte)id }, true, null);
     }
 
     public static void NetworkHit(int hit, int id)
     {
         Debug.Log("Hits: " + hit + " " + id);
-        PhotonNetwork.RaiseEvent(0, new byte[] {(byte) 1, (byte)id, (byte)hit}, true, null);
+        PhotonNetwork.RaiseEvent(1, new byte[] {(byte)id, (byte)hit}, true, null);
         //Debug.Log("After Hits: " + hit + " " + id);
     }
 
     private void OnEvent(byte eventcode, object content, int senderid)
     {
         //if (this.id != mainID) return;
-        Debug.Log("Event Triggered: " + eventcode);
+       
         byte[] c = (byte[])content;
-        if (c[0] == 0) //Player shot
+        //Debug.Log("Event Triggered: " + eventcode + " " + c[0]);
+        if (eventcode == 0) //Player shot
         {
 
             NetworkPlayer sender;
             players.TryGetValue(c[1], out sender);
             sender.gun.GetComponent<Gun>().NetworkShoot();
-            return;
+            //return;
         }
-        if (c[0] == 1 << 1) //Player was hit
+        if (eventcode == 1) //Player was hit
         {
-            Debug.Log("Not yet Hits: " + c[1] + " " + c[0]);
+            //Debug.Log("Not yet Hits: " + c[1] + " " + c[0]);
             if (c[1] == mainID)
             {
-                Debug.Log("Hits: " + c[1] + " " + c[0]);
+                //Debug.Log("Hits: " + c[1] + " " + c[0]);
                 this.Hit(c[0]);
             }
             return;
         }
-        if (c[0] == 2) //Player was killed
+        if (eventcode == 2) //Player was killed
         {
             Leaderboards.ReportKill(c[0], c[1]);
             return;

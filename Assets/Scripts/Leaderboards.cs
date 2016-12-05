@@ -14,7 +14,7 @@ public class Leaderboards : MonoBehaviour {
     
     public static void ReportKill(int killer, int victim)
     {
-        GameObject.Find("Killfeed").GetComponent<Leaderboards>().Kill(killer, victim);
+        GameObject.Find("Leaderboards").GetComponent<Leaderboards>().Kill(killer, victim);
         Killfeed.ReportKill(killer, victim);
     }
 
@@ -56,6 +56,11 @@ public class Leaderboards : MonoBehaviour {
 
     private void Add(int id)
     {
+        if(leaderboards == null)
+        {
+            leaderboards = new int[] { id };
+            return;
+        }
         int[] temp = new int[leaderboards.Length + 1];
 
         for(int i = 0; i < leaderboards.Length; i++)
