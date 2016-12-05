@@ -119,6 +119,12 @@ public class NetworkPlayer : MonoBehaviour
         {
             overviewCamera.SetActive(false);
             colorIndicator.color = ColorAlgorithm.GetColor(id);
+            AudioSource audioSource = this.gameObject.AddComponent<AudioSource>();
+            audioSource.clip = Resources.Load("hillySpace") as AudioClip;
+            audioSource.playOnAwake = true;
+            audioSource.loop = true;
+            audioSource.volume = 0.05f;
+            audioSource.Play();
         }
 
         GetComponent<UnityStandardAssets.Characters.FirstPerson.FirstPersonController>().enabled = _PhotonView.isMine;
