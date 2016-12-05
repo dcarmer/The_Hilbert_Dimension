@@ -4,6 +4,7 @@ public static class ColorAlgorithm
 {
     private const int MAXIMUM_PLAYERS = 9;
     private static Color[] colors;
+    private static string[] colorNames = new string[] {"Red", "Green", "Blue"};
     private static int nextPlayer = 0;
 
     public static int getPlayerID()
@@ -39,6 +40,11 @@ public static class ColorAlgorithm
 
             colors[i] = new Color(((value - 1) * r) / 255, ((value - 1) * g) / 255, ((value - 1) * b) / 255, 1);
         }
+    }
+
+    public static string GetName(int i)
+    {
+        return colorNames[i];
     }
 
     public static Color GetColor(int i)

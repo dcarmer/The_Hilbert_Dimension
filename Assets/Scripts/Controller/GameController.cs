@@ -120,7 +120,7 @@ public class GameController : MonoBehaviour
 
     public static void GenerateLevel(int id)//curent level plane is 50x50 centered on origin
     {        
-        Debug.Log("Generating Level.");
+        Debug.Log("Generating Level. ID:" + id);
 
         playerID = id;
         color = ColorAlgorithm.GetColor(playerID);

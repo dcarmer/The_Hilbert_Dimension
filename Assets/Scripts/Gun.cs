@@ -110,12 +110,13 @@ public class Gun : MonoBehaviour {
         {
             if (currentReloadDelay <= 0)
             {
-                for(int i = 0; i < RELOAD_AMOUNT; i++)
+                if (clip.Count == NUM_OF_BULLETS)
                 {
-                    if (unloaded.Peek() == null) break;
-                    clip.Push(unloaded.Pop());
-                    this.UpdateUI();
+                    unloaded = new Stack<GameObject>();
+                    return;
                 }
+                clip.Push(unloaded.Pop());
+                this.UpdateUI();
             }
         }
         if(currentFireDelay > 0)

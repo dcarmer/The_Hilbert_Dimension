@@ -32,7 +32,7 @@ public class NetworkPlayer : MonoBehaviour
 
     private void Start()
     {
-        id = (int)_PhotonView.owner.customProperties["ID"] + 1;
+        id = (int)_PhotonView.owner.customProperties["ID"];
         mainID = id;
 
         _Renderer = this.GetComponentInChildren<Renderer>();
@@ -41,6 +41,8 @@ public class NetworkPlayer : MonoBehaviour
         _Camera = GetComponentInChildren<Camera>();
         _AudioListener = GetComponentInChildren<AudioListener>();
 
+
+        //Debug.Log("ID: " + id);
         _Renderer.material.color = ColorAlgorithm.GetColor(id);
         //Debug.Log(this.gameObject.layer);
         this.gameObject.layer = LayerMask.NameToLayer("Player " + (id+1));
@@ -83,18 +85,20 @@ public class NetworkPlayer : MonoBehaviour
         int currentTeamsWalls = team + walloffset;
         for (int i = walloffset; i < numberOfTeams + walloffset; i++)
         {
-            if(i != currentTeamsWalls) hideLayer(c, LayerMask.LayerToName(i));
+            if(i != currentTeamsWalls) showLayer(c, i);
         }
+        //c.cullingMask = 1 << 8;
+        Debug.Log("Culling Mask: " + c.cullingMask);
     }
 
     private static void hideLayer(Camera c, int layer)
     {
-        c.cullingMask |= layer;
+        c.cullingMask |= 1 << layer;
     }
 
     private static void showLayer(Camera c, int layer)
     {
-        c.cullingMask &= ~layer;
+        c.cullingMask &= ~(1 << layer);
     }
 
     private static void hideLayer(Camera c, string layer)
