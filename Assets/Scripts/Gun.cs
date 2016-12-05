@@ -19,7 +19,7 @@ public class Gun : MonoBehaviour {
     private float currentReloadDelay = 0;
     private Stack<GameObject> clip;
     private Stack<GameObject> unloaded;
-    private int id;
+    public int id;
     private GameObject gui;
 
     public void Load (GameObject bullet)
@@ -34,7 +34,30 @@ public class Gun : MonoBehaviour {
         gui.GetComponent<Text>().text = "Ammo: " + clip.Count;
     }
 
-    void Shoot()
+    public void NetworkShoot()
+    {
+        Vector3 rotation = this.gameObject.transform.forward;
+        Vector3 position = this.gameObject.transform.position;
+
+        GameObject o = Resources.Load<GameObject>("Bullet");
+
+        GameObject o2 = (GameObject)Instantiate(o);
+        //GameObject o2 = PhotonNetwork.Instantiate("Bullet", new Vector3(0, -10, 0), Quaternion.identity, 0);
+        Color c = ColorAlgorithm.GetColor(id);
+
+        o2.GetComponent<Renderer>().material.color = c;
+        o2.GetComponentInChildren<Light>().color = c;
+        o2.GetComponent<Bullet>().gun = this;
+        o2.layer = 22; //The bullet layer
+
+        o2.transform.position = position + rotation * 0.7f;
+        //bullet.transform.rotation.SetLookRotation(rotation * 3);
+        o2.GetComponent<Rigidbody>().velocity = rotation * BULLET_SPEED;
+        o2.GetComponent<Bullet>().network = true;
+        o2.GetComponent<Bullet>().Fire();
+    }
+
+    public void Shoot()
     {
         //if (this.gameObject.GetComponentInParent<NetworkPlayer>().id != NetworkPlayer.mainID) return;
         try
@@ -53,6 +76,7 @@ public class Gun : MonoBehaviour {
                 //bullet.transform.rotation.SetLookRotation(rotation * 3);
                 bullet.GetComponent<Rigidbody>().velocity = rotation * BULLET_SPEED;
                 bullet.GetComponent<Bullet>().Fire();
+                NetworkPlayer.Shoot(this.id);
                 this.UpdateUI();
             }
         }
@@ -124,7 +148,7 @@ public class Gun : MonoBehaviour {
             currentFireDelay -= Time.deltaTime;
             return;
         }
-        if (Input.GetMouseButton(0))
+        if (this.id == NetworkPlayer.mainID && Input.GetMouseButton(0))
         {
             this.Shoot();
         }

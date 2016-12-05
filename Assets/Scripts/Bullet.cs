@@ -8,21 +8,27 @@ public class Bullet : MonoBehaviour {
     private static string hits = "NetworkedFPSController";
     private float remainingTime;
     private bool fired = false;
+    public bool network = false;
     public Gun gun;
     //public GameObject hitmarker = GameObject.Find("HitMarker");
 
 
     void OnCollisionEnter(Collision col)
     {
-        if (col.gameObject.name.Contains(hits))
+        if (this.gun.id == NetworkPlayer.mainID && col.gameObject.name.Contains(hits))
         {
-            Debug.Log("ded");
             //Put health stuff here
             //This means it hit a person
             this.GetComponent<AudioSource>().Play();
             Color color = GameObject.Find("HitMarker").GetComponent<Image>().color;
             color.a = 1.0f;
             GameObject.Find("HitMarker").GetComponent<Image>().color = color;
+            Debug.Log("Collides: " + col.gameObject.GetComponentInChildren<Gun>().id);
+            NetworkPlayer.NetworkHit(col.gameObject.GetComponentInChildren<Gun>().id, this.gun.id);
+        }
+        if (network)
+        {
+            Object.Destroy(this);
         }
         Return();
     }
@@ -35,6 +41,10 @@ public class Bullet : MonoBehaviour {
 
     void Return ()
     {
+        if (network)
+        {
+            Object.Destroy(this);
+        }
         fired = false;
         remainingTime = 1;
         if(gun != null)
@@ -61,7 +71,11 @@ public class Bullet : MonoBehaviour {
             remainingTime -= Time.deltaTime;
             if(remainingTime <= 0)
             {
-                this.Return();
+                if (network)
+                {
+                    Object.Destroy(this);
+                }
+                    this.Return();
             }
         }
 	}
