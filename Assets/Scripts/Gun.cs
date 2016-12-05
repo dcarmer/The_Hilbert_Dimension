@@ -5,12 +5,15 @@ using System;
 using UnityEngine.UI;
 
 public class Gun : MonoBehaviour {
+    //Don't touch this unless you're sure
+    private const float SOUND_FILE_LENGTH = 10.0f;
 
     private const int NUM_OF_BULLETS = 20;
     private const float BULLET_SPEED = 20;
     private const float FIRE_DELAY = 0.08f;
     private const float RELOAD_DELAY = 2.0f;
     private const int RELOAD_AMOUNT = 1;
+    private const float SOUND_PLAY_LENGTH = 0.08f;
 
     private float currentFireDelay = 0;
     private float currentReloadDelay = 0;
@@ -38,6 +41,8 @@ public class Gun : MonoBehaviour {
         {
             if (clip != null && clip.Count > 0)
             {
+                this.GetComponent<AudioSource>().time = SOUND_FILE_LENGTH - SOUND_PLAY_LENGTH;
+                this.GetComponent<AudioSource>().Play();
                 currentFireDelay = FIRE_DELAY;
                 currentReloadDelay = RELOAD_DELAY;
                 Vector3 rotation = this.gameObject.transform.forward;

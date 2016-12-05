@@ -17,6 +17,7 @@ public class Bullet : MonoBehaviour {
             Debug.Log("ded");
             //Put health stuff here
             //This means it hit a person
+            this.GetComponent<AudioSource>().Play();
         }
         Return();
     }
