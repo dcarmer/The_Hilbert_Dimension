@@ -119,14 +119,14 @@ public class GameController : MonoBehaviour
     static Color color;
 
     public static void GenerateLevel(int id)//curent level plane is 50x50 centered on origin
-    {        
+    {
         Debug.Log("Generating Level. ID:" + id);
 
         playerID = id;
         color = ColorAlgorithm.GetColor(playerID);
 
         /* Puts Walls around Every node */
-        Object[,,] walls = new Object[11, 11, 2]; //Tot#Walls for nxm grid = n*(m+1)+ m*(n+1) = 2mn+n+m
+        Object[,,] walls = new Object[10, 10, 2]; //Tot#Walls for nxm grid = n*(m+1)+ m*(n+1) = 2mn+n+m
         {
             float x, z;
             for (int i = 0; i < 10; i++)
@@ -135,20 +135,12 @@ public class GameController : MonoBehaviour
                 for (int j = 0; j < 10; j++)
                 {
                     z = j * 5 - 25;
-                    walls[i, j, 0] = makeWall(x, z, true);
-                    walls[i, j, 1] = makeWall(x, z, false);
-
-                    //((GameObject)walls[i, j, 0]).GetComponent<SpriteRenderer>().color = color;
-                    //((GameObject)walls[i, j, 1]).GetComponent<SpriteRenderer>().color = color;
+                    if (j != 0) { walls[i, j, 0] = makeWall(x, z, true); }
+                    if (i != 0) { walls[i, j, 1] = makeWall(x, z, false); }
                 }
-                walls[i, 10, 0] = makeWall(x, 25, true);
-                walls[i, 10, 1] = makeWall(25, x, false);
-
-                //((GameObject)walls[i, 10, 0]).GetComponent<SpriteRenderer>().color = color;
-                //((GameObject)walls[i, 10, 1]).GetComponent<SpriteRenderer>().color = color;
             };
         }
-        
+
 
         System.Random rng = new System.Random();
         Vector2[] dirs = { //Adjacent Node Directions
@@ -158,6 +150,8 @@ public class GameController : MonoBehaviour
             new Vector2(-1, 0)
         };
         HashSet<Vector2> visited = new HashSet<Vector2>(); //Holds Visited Nodes
+        List<Vector2> deadends = new List<Vector2>();//Holds Dead Ends
+
         Stack<Vector2> stack = new Stack<Vector2>(); //Holds Backtrack Worthy Nodes
         Vector2 current = new Vector2(0, 0); //Start node
         visited.Add(current);
@@ -169,10 +163,10 @@ public class GameController : MonoBehaviour
         {
             /* Loads in Viable Directions */
             options.Clear();
-            for (int i=0;i<dirs.Length;i++)
+            for (int i = 0; i < dirs.Length; i++)
             {
                 adj = current + dirs[i];
-                if(!visited.Contains(adj) && adj.x >= 0 && adj.x < 10 && adj.y >=0 && adj.y < 10)
+                if (!visited.Contains(adj) && adj.x >= 0 && adj.x < 10 && adj.y >= 0 && adj.y < 10)
                 {
                     options.Add(dirs[i]);
                 }
@@ -180,10 +174,11 @@ public class GameController : MonoBehaviour
 
             if (options.Count <= 0) //Dead End
             {
+                deadends.Add(current);
                 if (stack.Count <= 0) { break; }//No Backtrack Options = Quit
                 else { current = stack.Pop(); }//Backtrack = keep trying
             }
-            else 
+            else
             {
                 choice = options[0];
                 if (options.Count > 1) //Multiple options, add to stack
@@ -203,7 +198,37 @@ public class GameController : MonoBehaviour
                 }
                 visited.Add(current);
             }
-            
+
+        }
+        /* Makes Dead ends less likely */
+        for (int d = 0; d < deadends.Count; d++)
+        {
+            current = deadends[d];
+            if (rng.Next(3) != 0)//remove adj wall
+            {
+                options.Clear();
+                for (int i = 0; i < dirs.Length; i++)
+                {
+                    adj = current + dirs[i];
+                    if (adj.x >= 0 && adj.x < 10 && adj.y >= 0 && adj.y < 10)
+                    {
+                        options.Add(dirs[i]);
+                    }
+                }
+                if (options.Count > 0)
+                {
+                    choice = options[rng.Next(options.Count)];//pick random adj
+                    if (choice.x + choice.y < 0)
+                    {
+                        Destroy(walls[(int)current.x, (int)current.y, (int)Mathf.Abs(choice.x)]);
+                    }
+                    else
+                    {
+                        current += choice;
+                        Destroy(walls[(int)current.x, (int)current.y, (int)choice.x]);
+                    }
+                }
+            }
         }
     }
     public static Object makeWall(float x, float z, bool xy)
