@@ -211,7 +211,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 790531436}
+      - m_Target: {fileID: 212563907}
         m_MethodName: QuitGame
         m_Mode: 1
         m_Arguments:
@@ -625,12 +625,6 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 774586531}
---- !u!114 &790531436 stripped
-MonoBehaviour:
-  m_PrefabParentObject: {fileID: 114000013692000052, guid: 50291002184d9754195e0710d8249b98,
-    type: 2}
-  m_PrefabInternal: {fileID: 1625663946}
-  m_Script: {fileID: 11500000, guid: 07822fa1d161ac94d8046f43cb672c66, type: 3}
 --- !u!1 &1209911807
 GameObject:
   m_ObjectHideFlags: 0

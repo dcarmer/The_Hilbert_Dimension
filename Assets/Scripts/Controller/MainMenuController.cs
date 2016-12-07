@@ -21,4 +21,9 @@ public class MainMenuController : MonoBehaviour
 
         PersistentController._NetworkController.Connect();
     }
+    public void QuitGame()
+    {
+        Debug.Log("Closing game.");
+        Application.Quit();
+    }
 }

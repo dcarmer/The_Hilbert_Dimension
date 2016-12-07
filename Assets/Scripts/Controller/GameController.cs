@@ -251,4 +251,9 @@ public class GameController : MonoBehaviour
         o.layer = LayerMask.NameToLayer("Walls " + (playerID + 1));
         return o;
     }
+    public void QuitGame()
+    {
+        Debug.Log("Closing game.");
+        Application.Quit();
+    }
 }

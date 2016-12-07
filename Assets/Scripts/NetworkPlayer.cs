@@ -31,6 +31,8 @@ public class NetworkPlayer : MonoBehaviour
     private PhotonView _PhotonView;
 
     private GameObject gui;
+    private GameObject pauseMenu;
+    private bool paused;
 
     private Image colorIndicator;
 
@@ -92,7 +94,10 @@ public class NetworkPlayer : MonoBehaviour
             this.gui = GameObject.Find("Health");
             health = MAXIMUM_HEALTH;
             UpdateHealth();
+            pauseMenu = GameObject.Find("PauseMenu");
+            pauseMenu.SetActive(paused = false);
         }
+        
     }
 
     private void Start()
@@ -188,28 +193,41 @@ public class NetworkPlayer : MonoBehaviour
             transform.position = Vector3.Lerp(transform.position, realPos, Time.deltaTime * 10f);
             transform.rotation = Quaternion.Lerp(transform.rotation, realRot, Time.deltaTime * 10f);
         }
-        else if (respawntime > 0)
+        else
         {
-            respawntime -= Time.deltaTime;
-            if (respawntime <= 0)
+            if (Input.GetKeyDown("escape"))
             {
-                this.Respawn();
+                paused = !paused;
+                pauseMenu.SetActive(paused);
+                GetComponent<UnityStandardAssets.Characters.FirstPerson.FirstPersonController>().enabled = !paused;
+                gun.GetComponent<Gun>().enabled = !paused;
+                if (paused) { Cursor.lockState = CursorLockMode.None; }
+                Cursor.visible = paused;
+
             }
-        }
-        else if(invulnurable)
-        {
-            iframes -= Time.deltaTime;
-            if (iframes <= 0) invulnurable = false;
-        }
-        else if(healthDelay > 0)
-        {
-            healthDelay -= Time.deltaTime;
-        }
-        else if(health < MAXIMUM_HEALTH)
-        {
-            health += HEAL_AMOUNT;
-            if (health > MAXIMUM_HEALTH) health = MAXIMUM_HEALTH;
-            UpdateHealth();
+            if (respawntime > 0)
+            {
+                respawntime -= Time.deltaTime;
+                if (respawntime <= 0)
+                {
+                    this.Respawn();
+                }
+            }
+            else if (invulnurable)
+            {
+                iframes -= Time.deltaTime;
+                if (iframes <= 0) invulnurable = false;
+            }
+            else if (healthDelay > 0)
+            {
+                healthDelay -= Time.deltaTime;
+            }
+            else if (health < MAXIMUM_HEALTH)
+            {
+                health += HEAL_AMOUNT;
+                if (health > MAXIMUM_HEALTH) health = MAXIMUM_HEALTH;
+                UpdateHealth();
+            }
         }
     }
 
