@@ -268,6 +268,7 @@ public class NetworkPlayer : MonoBehaviour
 
             NetworkPlayer sender;
             players.TryGetValue(c[0], out sender);
+            if (sender == this) return;
             sender.gun.GetComponent<Gun>().NetworkShoot();
             //return;
         }
