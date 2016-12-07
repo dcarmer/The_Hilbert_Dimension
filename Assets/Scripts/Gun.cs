@@ -143,7 +143,14 @@ public class Gun : MonoBehaviour {
 
     void SetColor(Color c)
     {
-        this.gameObject.GetComponent<Renderer>().material.color = c;
+        Renderer[] renderers = GetComponentsInChildren<Renderer>();
+        foreach (Renderer curr in renderers)
+        {            
+            if (!curr.material.name.Contains("GunMetal")) //Lol
+            {
+                curr.material.color = c;
+            }            
+        }
     }
 
     // Update is called once per frame
